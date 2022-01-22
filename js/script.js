@@ -1,24 +1,28 @@
-const imageContainer = document.getElementById('image-container');
+let imageContainer = document.getElementById('image-container');
 const loader = document.getElementById('loader');
 
 let ready = false;
 let imagesLoaded = 0;
 let totalImages = 0;
 let photosArray = [];
-let imageType = 'car'
-    //Unsplash API
-const count = 2;
+let imageType;
+//Unsplash API
+const count = 3;
 const apiKey = 'h7N1s9DxwkFKSOhEqZZEVh-qjCnaJA2v20dNOiQk6oY';
-let apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&query=${imageType}&count=${count}`
+let apiUrl=`https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
 
 //search query
 function searchType() {
+  imageContainer.remove();
+    imageContainer = document.createElement("Div");
+    imageContainer.id="image-container";
+    imageContainer.classList.add("image-container");
+    document.body.appendChild(imageContainer);
     imageType = document.getElementById('filter').value;
-    if (imageType == '') {
-        imageType = "cars"
-    }
     console.log(imageType);
-    return apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&query=${imageType}&count=${count}`;
+    
+    apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&query=${imageType}&count=${count}`;
+    getPhotos();
 }
 
 
@@ -30,6 +34,7 @@ function imageLoaded() {
         ready = true;
         loader.hidden = true;
         console.log('ready =', ready);
+        
     }
 }
 
@@ -67,6 +72,7 @@ function displayPhotos() {
         img.addEventListener('load', imageLoaded);
         item.appendChild(img);
         imageContainer.appendChild(item);
+        
     });
 }
 
@@ -75,11 +81,11 @@ function displayPhotos() {
 
 async function getPhotos() {
     try {
-        let apiUrlNew = searchType();
-        const response = await fetch(apiUrlNew);
+        console.log(apiUrl);
+        const response = await fetch(apiUrl);
         photosArray = await response.json();
         displayPhotos();
-
+        
     } catch (error) {
         //Catch error
     }
@@ -92,6 +98,7 @@ window.addEventListener('scroll', () => {
         getPhotos();
     }
 });
+
 
 
 // On load
